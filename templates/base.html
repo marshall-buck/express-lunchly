@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://bootswatch.com/5/minty/bootstrap.css">
+  <title>Lunch.ly {% block title %}{% endblock %}</title>
+</head>
+<body>
+
+<div class="container-fixed">
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Lunch.ly</a>
+      <button class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarCollapse"
+              aria-controls="navbarCollapse"
+              aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              Customers <span class="visually-hidden">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/add/">Add a Customer</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/top-ten/">Top Ten</a>
+          </li>
+          <li class="nav-item">
+            <form class="m-1" method="get" action="/">
+              <input name="search" />
+              <button class="btn btn-primary btn-sm">search</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+</div>
+<div class="container">
+
+  <div id="content" style="margin-top: 80px">
+    {% block content %}{% endblock %}
+  </div>
+
+</div>
+</body>
+</html>
