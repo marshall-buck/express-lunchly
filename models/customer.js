@@ -103,12 +103,18 @@ class Customer {
  * -return array of matching customer instances
  */
   static async search(term) {
-    const results = await db.query(`
-    SELECT first_name, last_name
-    FROM customers
-    WHERE first_name LIKE '%$1%' OR last_name LIKE '%$1%'`, [term]);
 
-    return results.rows.map(c => new Customer(c));
+    const results = await db.query(`
+    SELECT id, first_name, last_name
+    FROM customers
+    WHERE first_name ILIKE $1 OR last_name ILIKE $1`, [`%${term}%`]);
+
+    // return results.rows.map(c => Customer.get(c.id))
+    //loop thru results .row and return
+    let arrOfCustomers = [];
+    for(let result of results){
+      const customer = await customer.get.c.id;
+    }
   }
 
 
