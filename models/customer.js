@@ -1,8 +1,10 @@
 "use strict";
 
+const { SearchSource } = require("jest");
 /** Customer for Lunchly */
 
 const db = require("../db");
+const { NotFoundError } = require("../expressError");
 const Reservation = require("./reservation");
 
 /** Customer of the restaurant. */
@@ -46,9 +48,9 @@ class Customer {
     );
 
     const customer = results.rows[0];
-    // TODO: why not custom error
+
     if (customer === undefined) {
-      const err = new Error(`No such customer: ${id}`);
+      const err = new NotFoundError(`No such customer: ${id}`);
       err.status = 404;
       throw err;
     }
@@ -96,6 +98,21 @@ class Customer {
   fullName() {
     return `${this.firstName} ${this.lastName}`;
   }
+
+  /** search for customer by name
+ * -return array of matching customer instances
+ */
+  static async search(term) {
+    const results = await db.query(`
+    SELECT first_name, last_name
+    FROM customers
+    WHERE first_name LIKE '%$1%' OR last_name LIKE '%$1%'`, [term]);
+
+    return results.rows.map(c => new Customer(c));
+  }
+
+
 }
+
 
 module.exports = Customer;

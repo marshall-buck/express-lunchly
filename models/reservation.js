@@ -42,6 +42,7 @@ class Reservation {
 
   /** save reservations */
   async save() {
+
     if (this.id === undefined) {
       const result = await db.query(`
 

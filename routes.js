@@ -10,8 +10,9 @@ const Reservation = require("./models/reservation");
 const router = new express.Router();
 
 /** Homepage: show list of customers. */
-
+// TODO: implement search here
 router.get("/", async function (req, res, next) {
+  debugger;
   const customers = await Customer.all();
   return res.render("customer_list.html", { customers });
 });
@@ -81,5 +82,7 @@ router.post("/:id/add-reservation/", async function (req, res, next) {
 
   return res.redirect(`/${customerId}/`);
 });
+
+
 
 module.exports = router;
