@@ -17,15 +17,24 @@ router.get("/", async function (req, res, next) {
   if (req.query.term) {
 
     const customers = await Customer.search(req.query.term);
-    console.log(customers)
+
     return res.render("customer_list.html", { customers });
 
   } else {
     const customers = await Customer.all();
-    // console.log(customers)
+
     return res.render("customer_list.html", { customers });
   }
 });
+
+/** Handel top ten list */
+router.get('/top-ten/', async function (req, res, next) {
+  const customers = await Customer.favorites();
+  // console.log(customers);
+
+  return res.render("top_ten.html", { customers });
+});
+
 
 /** Form to add a new customer. */
 
@@ -92,6 +101,11 @@ router.post("/:id/add-reservation/", async function (req, res, next) {
 
   return res.redirect(`/${customerId}/`);
 });
+
+
+
+
+
 
 
 

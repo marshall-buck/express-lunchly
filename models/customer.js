@@ -28,9 +28,9 @@ class Customer {
                   phone,
                   notes
            FROM customers
-           ORDER BY last_name, first_name`,
+           ORDER BY last_name, first_name`
     );
-    return results.rows.map(c => new Customer(c));
+    return results.rows.map((c) => new Customer(c));
   }
 
   /** get a customer by ID. */
@@ -44,7 +44,7 @@ class Customer {
                   notes
            FROM customers
            WHERE id = $1`,
-      [id],
+      [id]
     );
 
     const customer = results.rows[0];
@@ -72,7 +72,7 @@ class Customer {
         `INSERT INTO customers (first_name, last_name, phone, notes)
              VALUES ($1, $2, $3, $4)
              RETURNING id`,
-        [this.firstName, this.lastName, this.phone, this.notes],
+        [this.firstName, this.lastName, this.phone, this.notes]
       );
       this.id = result.rows[0].id;
     } else {
@@ -82,13 +82,8 @@ class Customer {
                  last_name=$2,
                  phone=$3,
                  notes=$4
-             WHERE id = $5`, [
-        this.firstName,
-        this.lastName,
-        this.phone,
-        this.notes,
-        this.id,
-      ],
+             WHERE id = $5`,
+        [this.firstName, this.lastName, this.phone, this.notes, this.id]
       );
     }
   }
@@ -100,25 +95,57 @@ class Customer {
   }
 
   /** search for customer by name
- * -return array of matching customer instances
- */
+   * -return array of matching customer instances
+   */
   static async search(term) {
 
-    const results = await db.query(`
-    SELECT id, first_name, last_name
+    const results = await db.query(
+      `
+    SELECT id, first_name, last_name, phone, notes
     FROM customers
-    WHERE first_name ILIKE $1 OR last_name ILIKE $1`, [`%${term}%`]);
+    WHERE CONCAT (first_name, ' ', last_name) ilike $1`,
+      [`%${term}%`]
+    );
 
-    // return results.rows.map(c => Customer.get(c.id))
-    //loop thru results .row and return
-    let arrOfCustomers = [];
-    for(let result of results){
-      const customer = await customer.get.c.id;
-    }
+
+    return results.rows.map(
+      (item) =>
+        new Customer({
+          id: item.id,
+          firstName: item.first_name,
+          lastName: item.last_name,
+          phone: item.phone,
+          notes: item.notes,
+        })
+    );
+
+
   }
+  /** top 10 list of customers
+   * -returns array of Customer instances
+   */
+  static async favorites() {
+    const results = await db.query(`
+    SELECT r.customer_id, COUNT(*), c.id, c.first_name, c.last_name, c.notes, c.phone
+    FROM reservations r
+    JOIN customers c
+    ON c.id = r.customer_id
+    GROUP BY r.customer_id, c.id
+    ORDER BY COUNT(*) DESC
+    LIMIT 10;`);
 
+    return results.rows.map(
+      (item) =>
+        new Customer({
+          id: item.id,
+          firstName: item.first_name,
+          lastName: item.last_name,
+          phone: item.phone,
+          notes: item.notes,
+        })
+    );
 
+  }
 }
-
 
 module.exports = Customer;

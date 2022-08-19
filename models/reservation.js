@@ -65,6 +65,7 @@ class Reservation {
         [this.customerId, this.startAt, this.numGuests, this.notes, this.id]);
     }
   }
+
 }
 
 
